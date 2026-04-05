@@ -52,7 +52,7 @@ int main(){
 
         // Valid input
         if (scanf("%d", &choice) != 1) {
-            printf("Invalid input, please enter a number");
+            printf("Invalid input, please enter a number\n");
             while(getchar() != '\n'); // Gets rid of input buffer
             continue;
         }
