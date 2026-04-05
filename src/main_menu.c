@@ -1,5 +1,9 @@
 /**
- * Main Menu: runs indefinetly 
+ * Main Menu: 
+ * Choose between the available programs to run, 
+ * and returns to the menu once you exit the program
+ * 
+ * Author: Wenda
  */
 #include <stdio.h>
 #include <stdlib.h>
