@@ -159,5 +159,7 @@ int main() {
     else printf("Invalid choice.\n");
   } while (choice != 0);
 
+    //temp
+    log_action("Memory: did something");
   return 0;
 }
