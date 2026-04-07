@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <string.h>
+#include <unistd.h>
 
 typedef struct {
     int size;
@@ -10,6 +14,19 @@ typedef struct {
 MemoryBlock memory[15]; // hardcode max 15 blocks, this can be adjusted
 int blockCount = 0;
 int curPID = 1000;
+
+void log_action(const char *message) {
+    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
+
+    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+        write(fd, message, strlen(message));
+    }
+    close(fd);
+}
 
 void initializeMemory() {
     int numHoles;
@@ -26,6 +43,8 @@ void initializeMemory() {
         memory[i].processID = -1;
     }
     printf("Memory initialized with %d holes.\n", numHoles);
+    log_action("Memory: Initialized Memory");
+
 }
 
 void allocateMemory() {
@@ -55,6 +74,8 @@ void allocateMemory() {
             }
 
             printf("Allocated %d KB to PID %d.\n", size, processID);
+		    log_action("Memory: Allocated Memory");
+
             return;
         }
     }
@@ -84,6 +105,7 @@ void deallocateMemory() {
                     j--;
                 }
             }
+    		log_action("Memory: Deallocated Memory");
             return;
         }
     }
@@ -111,6 +133,7 @@ void compactMemory() {
         blockCount++;
     }
     printf("Successfully merged %d KB into one free block.\n", freeTotal);
+    log_action("Memory: Compacted Memory");
 }
 
 void printMemoryMap() {
@@ -122,7 +145,10 @@ void printMemoryMap() {
             printf("  [PID %d] %d KB\n", memory[i].processID, memory[i].size);
     }
     printf("==================\n");
+    log_action("Memory: Printed Memory");
 }
+
+
 
 int main() {
     int choice;
