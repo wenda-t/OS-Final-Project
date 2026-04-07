@@ -14,6 +14,34 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+// Logger
+void log_action(const char *message) {
+    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
+
+    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+        write(fd, message, strlen(message));
+    }
+    close(fd);
+}
+
+void shutdown_logger() {
+    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
+
+    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+        write(fd, "SHUTDOWN", strlen("SHUTDOWN"));
+    }
+    close(fd);
+}
+
+// Print Menu
 static void print_menu(){
     printf("\n");
     printf("==== Main Menu ====\n");
@@ -25,6 +53,9 @@ static void print_menu(){
     printf("Enter your choice: ");
 }
 
+/**
+ * Function to run program via fork exec
+ */
 void run(char *path){
     // Create Fork
     pid_t pid = fork();
@@ -44,19 +75,6 @@ void run(char *path){
         // Parent: Just wait for child 
         wait(NULL);
     }
-}
-
-void shutdown_logger() {
-    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
-    struct sockaddr_un addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sun_family = AF_UNIX;
-    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
-
-    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
-        write(fd, "SHUTDOWN", strlen("SHUTDOWN"));
-    }
-    close(fd);
 }
 
 
@@ -79,31 +97,38 @@ int main(){
 
         // Valid input
         if (scanf("%d", &choice) != 1) {
+            log_action("Menu Choice: Invalid Input");
             printf("Invalid input, please enter a number\n");
             while(getchar() != '\n'); // Gets rid of input buffer
             continue;
         }
 
         switch (choice) {
-            case 1: 
+            case 1:
+                log_action("Menu Choice: 1"); 
                 run("./file_management");
                 break;
             case 2: 
+                log_action("Menu Choice: 2"); 
                 run("./peterson"); 
                 break;
             case 3: 
+                log_action("Menu Choice: 3"); 
                 run("./memory"); 
                 break;
             case 4: 
+                log_action("Menu Choice: 4"); 
                 run("./amdahl"); 
                 break;
             case 5: 
+                log_action("Menu Choice: 5"); 
                 printf("Exiting...\n");
                 shutdown_logger();
                 return 0;
             default:
-            printf("Invalid choice\n");
-            break;
+                log_action("Menu Choice: Invalid Input");
+                printf("Invalid choice\n");
+                break;
         }
     }
 
