@@ -35,7 +35,7 @@ echo "compiling file_management..."
 gcc -Wall -o "$BIN/file_management" "$SRC/file_management.c" || { echo "error compiling file_management"; exit 1; }
 
 echo "compiling memory..."
-#gcc -Wall -o "$BIN/memory" "$SRC/memory.c" || { echo "error compiling memory"; exit 1; } 
+gcc -Wall -o "$BIN/memory" "$SRC/memory.c" || { echo "error compiling memory"; exit 1; }
 
 echo "compiling amdahl..."
 gcc -Wall -o "$BIN/amdahl" "$SRC/amdahl.c" || { echo "error compiling amdahl"; exit 1; }

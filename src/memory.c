@@ -58,6 +58,8 @@ void allocateMemory() {
       }
 
       printf("Allocated %d KB to PID %d.\n", size, processID);
+	  log_action("Memory: Allocated Memory");
+
       return;
     }
   }
@@ -76,6 +78,7 @@ void deallocateMemory() {
             memory[i].isFree = true;
             memory[i].processID = -1;
             printf("Freed PID %d.\n", pid);
+            log_action("Memory: Deallocated Memory");
             return;
         }
     }
@@ -92,6 +95,8 @@ void printMemoryMap() {
             printf("  [PID %d] %d KB\n", memory[i].processID, memory[i].size);
     }
     printf("==================\n");
+    log_action("Memory: Printed Memory");
+
 }
 
 void compactMemory() {
@@ -117,6 +122,8 @@ void compactMemory() {
     }
 
     printf("Successfully merged %d KB into one free block.\n", freeTotal);
+	log_action("Memory: Compacted Memory ");
+
 }
 
 int main() {
@@ -159,7 +166,6 @@ int main() {
     else printf("Invalid choice.\n");
   } while (choice != 0);
 
-    //temp
-    log_action("Memory: did something");
+
   return 0;
 }
