@@ -34,8 +34,8 @@ chmod +x boot.sh
 ```
 
 ## Group Members
-Liam Jay
-Liam Ahern
-Wenda Tan
-Connor Gerrard
-Danesh Elahi
+Liam Jay  
+Liam Ahern  
+Wenda Tan  
+Connor Gerrard  
+Danesh Elahi  
