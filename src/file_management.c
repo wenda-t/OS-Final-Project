@@ -1,10 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <string.h>
+#include <unistd.h>
 
 /**
  * Simple file management system with basic file operations.
 */
+
+//logger function
+void log_action(const char *message) {
+    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
+
+    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+        write(fd, message, strlen(message));
+    }
+    close(fd);
+}
 
 
 // Creates file with given filename
@@ -135,24 +153,32 @@ int main() {
         switch (choice) {
             case 1:
                 createFile();
+                log_action("FILE_MANAGEMENT: Created file");
                 break;
             case 2:
                 readFile();
+                log_action("FILE_MANAGEMENT: Read file");
                 break;
             case 3:
                 writeFile();
+                log_action("FILE_MANAGEMENT: Wrote to file");
                 break;
             case 4:
                 deleteFile();
+                log_action("FILE_MANAGEMENT: Deleted file");
                 break;
             case 5:
                 listFiles();
+                log_action("FILE_MANAGEMENT: Listed file");
                 break;
             case 6:
                 printf("Exiting...\n");
+                log_action("FILE_MANAGEMENT: Exited successfully");
                 break;
             default:
                 printf("Invalid choice.\n");
+                log_action("FILE_MANAGEMENT: Invalid choice");
+
         }
 
     } while (choice != 6);

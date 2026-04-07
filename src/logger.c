@@ -15,7 +15,7 @@
 int main() {
 
     //open log.txt
-    FILE *log_file = fopen("logs/logs.txt", "w");
+    FILE *log_file = fopen("../logs/logs.txt", "w");
     if (log_file == NULL) {
         perror("fopen");
         exit(EXIT_FAILURE);
@@ -86,12 +86,20 @@ int main() {
             exit(EXIT_FAILURE);
         }
 
-        if (strcmp(buffer, "SHUTDOWN") == 0) {
+        //reads from when main menu closes
+        if (strncmp(buffer, "SHUTDOWN", 8) == 0) {
+            time_t given_time;
+            struct tm *local_time;
+            char timestamp[BUFFER_SIZE];
+            time(&given_time);
+            local_time = localtime(&given_time);
+            strftime(timestamp, BUFFER_SIZE, "%Y-%m-%d %H:%M:%S", local_time);
+            fprintf(log_file, "[%s]  MAIN_MENU: System shutdown\n", timestamp);
+            fclose(log_file);
             close(client_fd);
             close(socket_fd);
             unlink(SOCKET_PATH);
             exit(EXIT_SUCCESS);
-
         }
 
         time_t given_time;

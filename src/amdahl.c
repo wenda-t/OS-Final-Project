@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <string.h>
+#include <unistd.h>
 
 /**
  * Speedup Calculation
@@ -17,6 +21,21 @@
  * Speedup = 1 / ( (1-P) + (P/N) )
  * Where P is the parallel fraction(0-1) and N is the number of cores.
  */
+
+void log_action(const char *message) {
+    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
+
+    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+        write(fd, message, strlen(message));
+    }
+    close(fd);
+}
+
+
 int main(){
     double p, speedup;
     int n;
@@ -44,6 +63,9 @@ int main(){
     speedup = 1.0 / ((1.0-p) + (p/n));
     printf("Theoretical Speedup: %.2f\n", speedup);
     printf("This means the program runs %.2f times faster (parallel) than on 1 core (serial).\n", speedup);
+
+    log_action("AMDAHL: Calculated speedup");
+
 
     return 0;
 }

@@ -1,5 +1,22 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <string.h>
+#include <unistd.h>
+
+void log_action(const char *message) {
+    int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "./logger_location", sizeof(addr.sun_path) - 1);
+
+    if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == 0) {
+        write(fd, message, strlen(message));
+    }
+    close(fd);
+}
 
 typedef struct {
   int size;
@@ -41,6 +58,8 @@ void allocateMemory() {
       }
 
       printf("Allocated %d KB to PID %d.\n", size, processID);
+	  log_action("Memory: Allocated Memory");
+
       return;
     }
   }
@@ -59,6 +78,7 @@ void deallocateMemory() {
             memory[i].isFree = true;
             memory[i].processID = -1;
             printf("Freed PID %d.\n", pid);
+            log_action("Memory: Deallocated Memory");
             return;
         }
     }
@@ -75,6 +95,8 @@ void printMemoryMap() {
             printf("  [PID %d] %d KB\n", memory[i].processID, memory[i].size);
     }
     printf("==================\n");
+    log_action("Memory: Printed Memory");
+
 }
 
 void compactMemory() {
@@ -100,6 +122,8 @@ void compactMemory() {
     }
 
     printf("Successfully merged %d KB into one free block.\n", freeTotal);
+	log_action("Memory: Compacted Memory ");
+
 }
 
 int main() {
@@ -141,6 +165,7 @@ int main() {
     else if (choice == 0) printf("Exiting menu.\n");
     else printf("Invalid choice.\n");
   } while (choice != 0);
+
 
   return 0;
 }
