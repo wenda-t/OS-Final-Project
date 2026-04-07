@@ -81,10 +81,10 @@ void calculate_speedup(){
     char buffer[100];
     
     // Get Parallel Portion
-    printf("Enter the parallel portion of the program (0.0 to 1.0):\n");
+    printf("\nEnter the parallel portion of the program (0.0 to 1.0):\n");
     scanf("%lf", &p);
     // Logging 
-    snprintf(buffer, sizeof(buffer), "AMDAHL: User Input for Parallel Portion: %lf", &p);
+    snprintf(buffer, sizeof(buffer), "AMDAHL: User Input for Parallel Portion: %lf", p);
     log_action(buffer);
 
     // Get Number of Cores
@@ -112,10 +112,10 @@ void compare_serial_parallel(){
     char buffer[100];
     
     // Get Parallel Portion
-    printf("Enter the parallel portion of the program (0.0 to 1.0):\n");
+    printf("\nEnter the parallel portion of the program (0.0 to 1.0):\n");
     scanf("%lf", &p);
     // Logging 
-    snprintf(buffer, sizeof(buffer), "AMDAHL: User Input for Parallel Portion: %lf", &p);
+    snprintf(buffer, sizeof(buffer), "AMDAHL: User Input for Parallel Portion: %lf", p);
     log_action(buffer);
 
     // Get Number of Cores
@@ -160,6 +160,7 @@ int main(){
                 break;
             case 2:
                 log_action("AMDAHL: Compare Serial vs Parallel");
+                compare_serial_parallel();
                 break;
             case 3: 
                 log_action("AMDAHL: Exit");
