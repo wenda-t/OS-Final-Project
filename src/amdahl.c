@@ -135,7 +135,7 @@ void compare_serial_parallel(){
     }
 
     printf("\nSerial Speed: %.2f\n", serial_speedup);
-    printf("Parallel Speedup:  %.2f\n", parallel_speedup)
+    printf("Parallel Speedup:  %.2f\n", parallel_speedup);
     printf("The Parallel program is %.2fx faster than the serial program.\n", parallel_speedup/serial_speedup);
 }
 
@@ -162,7 +162,7 @@ int main(){
                 log_action("AMDAHL: Compare Serial vs Parallel");
                 break;
             case 3: 
-                log_action("AMDAHL: Exit")
+                log_action("AMDAHL: Exit");
                 printf("Exiting...\n");
                 return 0;
             default:
