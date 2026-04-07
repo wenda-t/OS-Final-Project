@@ -29,7 +29,7 @@ gcc -Wall -o "$BIN/logger" "$SRC/logger.c" || { echo "error compiling logger"; e
 
 #4. Compile remaining .c files in /src
 echo "compiling peterson..."
-#gcc -Wall -o "$BIN/peterson" "$SRC/peterson.c" || { echo "error compiling peterson"; exit 1; }
+gcc -Wall -o "$BIN/peterson" "$SRC/peterson.c" || { echo "error compiling peterson"; exit 1; }
 
 echo "compiling file_management..."
 gcc -Wall -o "$BIN/file_management" "$SRC/file_management.c" || { echo "error compiling file_management"; exit 1; }
