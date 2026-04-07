@@ -137,6 +137,7 @@ void compare_serial_parallel(){
     printf("\nSerial Speed: %.2f\n", serial_speedup);
     printf("Parallel Speedup:  %.2f\n", parallel_speedup);
     printf("The Parallel program is %.2fx faster than the serial program.\n", parallel_speedup/serial_speedup);
+    printf("That means a program that takes 1000s to execute serially could be done in %.1fs with parallel execution\n", (1000.0/parallel_speedup));
 }
 
 
