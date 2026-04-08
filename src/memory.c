@@ -29,7 +29,7 @@ void log_action(const char *message) {
 }
 
 void initializeMemory() {
-    int numHoles;
+    int numHoles, memSum = 0;
     printf("Enter the number of holes to allocate: ");
     if (scanf("%d", &numHoles) != 1 || numHoles <= 0 || numHoles > 15) {
         printf("Invalid number of holes. Must be between 1 and 15.\n");
@@ -47,7 +47,11 @@ void initializeMemory() {
             while (getchar() != '\n');
             return;
         }
+        memSum += holes[i];
     }
+    char logMsg[64];
+    snprintf(logMsg, sizeof(logMsg), "Memory: Initialized %d KB of memory", memSum);
+    log_action(logMsg);
 
     blockCount = numHoles;
     for (int i = 0; i < numHoles; i++) {
@@ -56,7 +60,6 @@ void initializeMemory() {
         memory[i].processID = -1;
     }
     printf("Memory initialized with %d holes.\n", numHoles);
-    char logMsg[64];
     snprintf(logMsg, sizeof(logMsg), "Memory: Initialized with %d holes", numHoles);
     log_action(logMsg);
 
