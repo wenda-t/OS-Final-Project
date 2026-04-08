@@ -42,7 +42,7 @@ void initializeMemory() {
     int holes[numHoles];
     printf("Enter hole sizes (1KB - 1000KB): ");
     for (int i = 0; i < numHoles; i++) {
-        if (scanf("%d", &holes[i]) != 1 || holes[i] <= 0 || holes > 1000) {
+        if (scanf("%d", &holes[i]) != 1 || holes[i] <= 0 || holes[i] > 1000) {
             printf("Invalid hole size. Must be a positive integer.\n");
             log_action("Memory ERROR: Invalid hole size during initialization");
             while (getchar() != '\n');
