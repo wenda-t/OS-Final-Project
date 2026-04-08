@@ -30,7 +30,7 @@ void run_process(int self, int other) {
     char buffer[100];
 
     printf("\nProcess %d is in entry section\n", self + 1);
-    snprintf(buffer, sizeof(buffer), "Peterson: Process %d entered entry section\n", self + 1);
+    snprintf(buffer, sizeof(buffer), "Peterson: Process %d entered entry section", self + 1);
     log_action(buffer);
 
     flag[self] = 1;
@@ -40,19 +40,19 @@ void run_process(int self, int other) {
     }
 
     printf("Process %d is in critical section\n", self + 1);
-    snprintf(buffer, sizeof(buffer), "Peterson: Process %d entered critical section\n", self + 1);
+    snprintf(buffer, sizeof(buffer), "Peterson: Process %d entered critical section", self + 1);
     log_action(buffer);
 
     sleep(1);
 
     printf("Process %d is leaving critical section\n", self + 1);
-    snprintf(buffer, sizeof(buffer), "Peterson: Process %d leaving critical section\n", self + 1);
+    snprintf(buffer, sizeof(buffer), "Peterson: Process %d leaving critical section", self + 1);
     log_action(buffer);
 
     flag[self] = 0;
 
     printf("Process %d is in exit section\n", self + 1);
-    snprintf(buffer, sizeof(buffer), "Peterson: Process %d entered exit section\n", self + 1);
+    snprintf(buffer, sizeof(buffer), "Peterson: Process %d entered exit section", self + 1);
     log_action(buffer);
 }
 
@@ -74,7 +74,7 @@ int main() {
             return 1;
         }
 
-        snprintf(buffer, sizeof(buffer), "Peterson: User selected option %d\n", choice);
+        snprintf(buffer, sizeof(buffer), "Peterson: User selected option %d", choice);
         log_action(buffer);
 
         if (choice == 1) {
@@ -85,12 +85,12 @@ int main() {
             run_process(0, 1);
             run_process(1, 0);
         } else if (choice == 4) {
-            log_action("Peterson: Program exited\n");
+            log_action("Peterson: Program exited");
             printf("Exiting Peterson module\n");
             break;
         } else {
             printf("Invalid choice\n");
-            log_action("Peterson: Invalid menu choice\n");
+            log_action("Peterson: Invalid menu choice");
         }
     }
 
