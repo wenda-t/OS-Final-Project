@@ -7,6 +7,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <pthread.h>
+
 
 int flag[2] = {0, 0};
 int turn = 0;
@@ -56,6 +58,20 @@ void run_process(int self, int other) {
     log_action(buffer);
 }
 
+// Thread argument struct
+typedef struct {
+    int self;
+    int other;
+} ThreadArgs;
+ 
+// Thread entry point
+void *thread_run(void *arg) {
+    ThreadArgs *args = (ThreadArgs *)arg;
+    run_process(args->self, args->other);
+    return NULL;
+}
+
+
 int main() {
     int choice;
     char buffer[100];
@@ -82,8 +98,22 @@ int main() {
         } else if (choice == 2) {
             run_process(1, 0);
         } else if (choice == 3) {
-            run_process(0, 1);
-            run_process(1, 0);
+            
+            // Reset shared state before spawning threads
+            flag[0] = 0;
+            flag[1] = 0;
+            turn = 0;
+
+            pthread_t t1, t2;
+            ThreadArgs args1 = {0, 1};
+            ThreadArgs args2 = {1, 0};
+ 
+            pthread_create(&t1, NULL, thread_run, &args1);
+            pthread_create(&t2, NULL, thread_run, &args2);
+ 
+            pthread_join(t1, NULL);
+            pthread_join(t2, NULL);
+
         } else if (choice == 4) {
             log_action("Peterson: Program exited");
             printf("Exiting Peterson module\n");
