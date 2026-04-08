@@ -1,3 +1,6 @@
+//Author: Liam Ahern A00463807
+//logger
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
