@@ -105,6 +105,8 @@ int main() {
             exit(EXIT_SUCCESS);
         }
 
+        //Gets the current time, converts it to local time, formats as a string, 
+        //then writes the full [timestamp] message
         time_t given_time;
         struct tm *local_time;
         char timestamp[BUFFER_SIZE];
@@ -114,10 +116,11 @@ int main() {
         strftime(timestamp, BUFFER_SIZE, "%Y-%m-%d %H:%M:%S", local_time);
         fprintf(log_file, "[%s]  %s\n", timestamp,  buffer);
 
+        //close connection
         close(client_fd);
 
     }
-    //close connection and release memory
+    //release memory
     fclose(log_file);
 
     return 0;
