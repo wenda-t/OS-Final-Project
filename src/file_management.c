@@ -28,16 +28,22 @@ void log_action(const char *message) {
 // Creates file with given filename
 void createFile() {
     char filename[100];
+    char buffer[150];
     FILE *fp;
 
     printf("Enter filename to create: ");
     scanf("%s", filename);
+    snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Created file '%s'", filename);
+    log_action(buffer);
 
     // try to open file to see if it was created successfully
     fp = fopen(filename, "w");
+    
 
     if (fp == NULL) {
         printf("Error creating file.\n");
+        snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Failed to create file '%s'", filename);
+        log_action(buffer);
         return;
     }
 
@@ -48,16 +54,21 @@ void createFile() {
 // reads file contents of given filename
 void readFile() {
     char filename[100];
+    char buffer[200];
     char ch;
     FILE *fp;
 
     printf("Enter filename to read: ");
     scanf("%s", filename);
+    snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Trying to read file '%s'", filename);
+    log_action(buffer);
 
     fp = fopen(filename, "r");
 
     if (fp == NULL) {
         printf("Error opening file.\n");
+        snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Failed to read file '%s'", filename);
+        log_action(buffer);
         return;
     }
 
@@ -75,23 +86,33 @@ void readFile() {
 void writeFile() {
     char filename[100];
     char text[200];
+    char buffer[300];
     FILE *fp;
 
     printf("Enter filename to write: ");
     scanf("%s", filename);
 
-    fp = fopen(filename, "a"); // append mode
+    snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Attempting to write to file '%s'", filename);
+    log_action(buffer);
 
+    fp = fopen(filename, "a");
     if (fp == NULL) {
         printf("Error opening file.\n");
+        snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Failed to open file '%s'", filename);
+        log_action(buffer);
         return;
     }
 
     printf("Enter content to write:\n");
-    getchar(); // clears new line from thebuffer
-    fgets(text, sizeof(text), stdin); // reads all input text
+    getchar();
+    fgets(text, sizeof(text), stdin);
 
-    fprintf(fp, "%s", text); // writes to the file
+    // Strip trailing newline before logging
+    text[strcspn(text, "\n")] = '\0';
+
+    fprintf(fp, "%s\n", text);
+    snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Wrote '%.150s' to file '%s'", text, filename);
+    log_action(buffer);
 
     printf("Content written to \"%s\".\n", filename);
     fclose(fp);
@@ -101,14 +122,21 @@ void writeFile() {
 // deletes file of given filename
 void deleteFile() {
     char filename[100];
+    char buffer[150];
 
     printf("Enter file name to delete: ");
     scanf("%s", filename);
+    snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Attempting to delete file '%s'", filename);
+    log_action(buffer);
 
     if (remove(filename) == 0) {
         printf("\nFile deleted successfully.\n");
+        snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Deleted file '%s'", filename);
+        log_action(buffer);
     } else {
         printf("\nError deleting file.\n");
+        snprintf(buffer, sizeof(buffer), "FILE_MANAGEMENT: Failed to delete file '%s'", filename);
+        log_action(buffer);
     }
 }
 
@@ -122,6 +150,7 @@ void listFiles() {
 
     if (dir == NULL) {
         printf("Error opening directory.\n");
+        log_action("FILE_MANAGEMENT: Failed to open directory");
         return;
     }
 
@@ -153,23 +182,23 @@ int main() {
         switch (choice) {
             case 1:
                 createFile();
-                log_action("FILE_MANAGEMENT: Created file");
+                log_action("FILE_MANAGEMENT: Selected Create File");
                 break;
             case 2:
                 readFile();
-                log_action("FILE_MANAGEMENT: Read file");
+                log_action("FILE_MANAGEMENT: Selected read file");
                 break;
             case 3:
                 writeFile();
-                log_action("FILE_MANAGEMENT: Wrote to file");
+                log_action("FILE_MANAGEMENT: Selected write to file");
                 break;
             case 4:
                 deleteFile();
-                log_action("FILE_MANAGEMENT: Deleted file");
+                log_action("FILE_MANAGEMENT: Selected delete file");
                 break;
             case 5:
                 listFiles();
-                log_action("FILE_MANAGEMENT: Listed file");
+                log_action("FILE_MANAGEMENT: Selected list files");
                 break;
             case 6:
                 printf("Exiting...\n");
